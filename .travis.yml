@@ -1,0 +1,26 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t gasha1/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true gasha1/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t gasha1/multi-client ./client
+  - docker build -t gasha1/multi-nginx ./nginx
+  - docker build -t gasha1/multi-server ./server
+  - docker build -t gasha1/multi-worker ./worker
+  # login to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+  # push images to Docker Hub
+  - docker push gasha1/multi-client
+  - docker push gasha1/multi-nginx
+  - docker push gasha1/multi-server
+  - docker push gasha1/multi-worker
+
+
+     
