@@ -22,5 +22,18 @@ after_success:
   - docker push gasha1/multi-server
   - docker push gasha1/multi-worker
 
+deploy: 
+  provider: elasticbeanstalk
+  region: "eu-west-2"
+  app: "multi-docker"
+  env: "multi-docker-env"
+  bucket_name: "elasticbeanstalk-eu-west-2-466542897224"
+  bucket-path: "docker-multi"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: 
+    secure: $AWS_SECRET_KEY
+
 
      
